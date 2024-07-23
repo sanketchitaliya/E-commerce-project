@@ -5,28 +5,30 @@ confirmPassword =   document.getElementById("passwordconfirm");
 
 
 function resetPasswordUser() {
-    pureVedaUsers = JSON.parse(localStorage.getItem("login"));
+
+    let userData = JSON.parse(localStorage.getItem("register"));
     email = email.value;
     oldpass  = oldpass.value;
     newPassword = newPassword.value;
     confirmPassword = confirmPassword.value;
     
-    let indexUser = pureVedaUsers.find(user => user.email === email);
-    if (indexUser >= 0) {
-        if (pureVedaUsers.password === oldpass) {
-            if (newPassword === confirmPassword) {
-                pureVedaUsers.password = newPassword;
-                localStorage.setItem("register", JSON.stringify(pureVedaUsers));
-                location.href ='index.html';          
-              }
-            else {
-                alert("Username and password Are Not matched.");
-                
-            }
+    let indexUser = userData.find(user => user.email === email);
+    if (!indexUser) {
+        alert("User not found. Please enter a valid email.");
+        return;
+    }
+
+    
+
+    let updatedData = userData.map(user => {
+        if (user.email === email) {
+            return { ...user, password: newPassword };
         }
-    }
-    else {
-        alert("User not found.");
-       
-    }
+        return user;
+    });
+
+    localStorage.setItem("register", JSON.stringify(updatedData));
+    alert("Password updated successfully");
+    window.location.href = './registration.html';
+
 }
